@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calculator</title>
+    <link rel="icon" href="https://d15-a.sdn.cz/d_15/c_img_F_I/gmZBVxS.jpeg?fl=cro,0,0,799,449%7Cres,722,,1%7Cwebp,75" type="image/jpeg">
+    <link rel="stylesheet" href="../style.css">
+    <style>
+        .calculator {
+            width: 300px;
+            margin: 50px auto;
+            padding: 20px;
+            border: 2px solid #333;
+            border-radius: 10px;
+            background-color: #fff;
+        }
+        .display {
+            width: 100%;
+            height: 50px;
+            font-size: 24px;
+            text-align: right;
+            margin-bottom: 10px;
+            padding: 5px;
+            box-sizing: border-box;
+            font-weight: normal;
+        }
+        .buttons {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 10px;
+        }
+        button {
+            height: 50px;
+            font-size: 18px;
+            border: none;
+            border-radius: 5px;
+            background-color: #5a2e2e;
+            cursor: pointer;
+            font-weight: normal;
+        }
+        button:hover {
+            background-color: #351c1c;
+        }
+        .operator {
+            background-color: #ec3750;
+            color: white;
+        }
+        .operator:hover {
+            background-color: #d32f2f;
+        }
+        .equal {
+            grid-column: span 4;
+            background-color: #4caf50;
+            color: white;
+        }
+        .equal:hover {
+            background-color: #45a049;
+        }
+    </style>
+</head>
+<body>
+    <h1>Calculator</h1>
+    <div class="calculator">
+        <input type="text" class="display" id="display" readonly>
+        <div class="buttons">
+            <button onclick="appendToDisplay('7')">7</button>
+            <button onclick="appendToDisplay('8')">8</button>
+            <button onclick="appendToDisplay('9')">9</button>
+            <button onclick="appendToDisplay('+')" class="operator">+</button>
+            <button onclick="appendToDisplay('4')">4</button>
+            <button onclick="appendToDisplay('5')">5</button>
+            <button onclick="appendToDisplay('6')">6</button>
+            <button onclick="appendToDisplay('-')" class="operator">-</button>
+            <button onclick="appendToDisplay('1')">1</button>
+            <button onclick="appendToDisplay('2')">2</button>
+            <button onclick="appendToDisplay('3')">3</button>
+            <button onclick="appendToDisplay('*')" class="operator">*</button>
+            <button onclick="appendToDisplay('0')">0</button>
+            <button onclick="appendToDisplay('.')">.</button>
+            <button onclick="clearDisplay()">C</button>
+            <button onclick="appendToDisplay('/')" class="operator">/</button>            <button onclick="calculate()" class="operator" style="grid-column: span 4; height: 50px; font-size: 18px;">=</button>            <input type="number" id="chance" placeholder="chance for answer to be correct" min="0" max="100" style="grid-column: span 4; height: 50px; font-size: 18px; text-align: center; border: 1px solid #333; border-radius: 5px; font-weight: normal;">
+            
+        </div>
+    </div>
+
+    <script>
+        let display = document.getElementById('display');
+        let chanceInput = document.getElementById('chance');
+
+        chanceInput.addEventListener('input', function() {
+            let value = parseFloat(chanceInput.value);
+            if (value < 0) chanceInput.value = 0;
+            if (value > 100) chanceInput.value = 100;
+        });
+
+        function appendToDisplay(value) {
+            display.value += value;
+        }
+
+        function clearDisplay() {
+            display.value = '';
+        }
+
+        function chance(realResult) {
+            let chanceInput = document.getElementById('chance').value.trim();
+            let chanceValue = chanceInput === '' ? 100 : parseFloat(chanceInput) || 0;
+            let random = Math.random() * 100;
+            if (random <= chanceValue) {
+                return realResult;
+            } else {
+                let bigNumber = 1000; 
+                return Math.floor(Math.random() * (bigNumber * 0.7)) + 1;
+            }
+        }
+
+        function calculate() {
+            if (!display.value.trim()) {
+                display.value = 'Error';
+                return;
+            }
+            try {
+                let realResult = eval(display.value);
+                display.value = chance(realResult);
+            } catch (error) {
+                display.value = 'Error';
+            }
+        }
+      
+        
+    </script>
+</body>
+</html>
