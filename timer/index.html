@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Timer</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, #000000 0%, #693d96 100%);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+        }
+        h1 {
+            color: white;
+            margin-bottom: 30px;
+            font-size: 36px;
+        }
+        .container {
+            background-color: white;
+            padding: 40px;
+            border-radius: 20px;
+            text-align: center;
+            width: 500px;
+        }
+        .display {
+            font-size: 44px;
+            font-weight: bold;
+            color: #000000;
+            margin-bottom: 30px;
+            font-family: 'Courier New', monospace;
+            background-color: #a644c4;
+            padding: 20px;
+            border-radius: 10px;
+            letter-spacing: 2px;
+        }
+        .button-group {
+            display: flex;
+            gap: 10px;
+            flex-direction: column;
+        }
+        button {
+            padding: 15px 25px;
+            font-size: 18px;
+            font-weight: bold;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+        }
+        #startBtn {
+            background-color: #105c12;
+            color: white;
+        }
+        #startBtn:hover:not(:disabled) {
+            background-color: #28662b;
+        }
+        #pauseBtn {
+            background-color: #804d00;
+            color: white;
+        }
+        #pauseBtn:hover:not(:disabled) {
+            background-color: #804d00;
+        }
+        #restartBtn {
+            background-color: #940b01;
+            color: white;
+        }
+        #restartBtn:hover:not(:disabled) {
+            background-color: #940b01;
+        }
+        #backBtn {
+            position: fixed;
+            bottom: 15px;
+            right: 15px;
+            background-color: #252525;
+            color: white;
+            padding: 6px 12px;
+            font-size: 11px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;  
+            width: 90px;
+            height: 40px;
+        }
+        #backBtn:hover {
+            background-color: #2e2e2e;
+        }
+    </style>
+</head>
+<body>
+    <button id="backBtn" onclick="window.location.href = '../';">Back</button>
+    <h1>Timer</h1>
+    <div class="container">
+        <div class="display" id="display">00:00:00:000</div>
+        <div class="button-group">
+            <button id="startBtn" onclick="startTimer()">Start</button>
+            <button id="pauseBtn" onclick="pauseTimer()" disabled>Pause</button>
+            <button id="restartBtn" onclick="restartTimer()">Restart</button>
+        </div>
+    </div>
+    <script>
+        let elapsedTime = 0;
+        let timerInterval = null;
+        let isRunning = false;
+        let lastTime = 0;
+        const display = document.getElementById('display');
+        const startBtn = document.getElementById('startBtn');
+        const pauseBtn = document.getElementById('pauseBtn');
+        function formatTime(ms) {
+            const totalSeconds = Math.floor(ms / 1000);
+            const h = Math.floor(totalSeconds / 3600);
+            const m = Math.floor((totalSeconds % 3600) / 60);
+            const s = totalSeconds % 60;
+            const milli = ms % 1000;
+            return `${String(h).padStart(2, '0')}:${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')}:${String(milli).padStart(3, '0')}`;
+        }
+        function startTimer() {
+            if (isRunning) return;
+            isRunning = true;
+            lastTime = Date.now();
+            startBtn.disabled = true;
+            pauseBtn.disabled = false;
+            timerInterval = setInterval(() => {
+                const now = Date.now();
+                elapsedTime += now - lastTime;
+                lastTime = now;
+                display.textContent = formatTime(elapsedTime);
+            }, 50);
+        }
+        function pauseTimer() {
+            if (!isRunning) return;
+            isRunning = false;
+            clearInterval(timerInterval);
+            startBtn.disabled = false;
+            pauseBtn.disabled = true;
+        }
+        function restartTimer() {
+            isRunning = false;
+            clearInterval(timerInterval);
+            elapsedTime = 0;
+            lastTime = 0;
+            display.textContent = '00:00:00:000';
+            startBtn.disabled = false;
+            pauseBtn.disabled = true;
+        }
+    </script>
+</body>
+</html>
